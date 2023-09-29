@@ -6,6 +6,7 @@ const Register = () => {
 
     const [registerError, setRegisterError] = useState('');
     const [success, setSuccess] = useState('');
+    const [showPass, setShowPass] = useState(true);
 
     const handleRegister = e => {
         e.preventDefault();
@@ -18,12 +19,16 @@ const Register = () => {
         setSuccess('');
 
         if (password.length < 6) {
-            setRegisterError('password must be at least 6 characters');
-            // console.log(password.length);
+            setRegisterError("password must be at least 6 characters");
+            console.log(password.length);
+            return;
+        }
+        else if (!/A-Z/.test(password)) {
+            setRegisterError('Your password should have at least one upper case characters.');
             return;
         }
 
-        // console.log(registerError);
+        console.log(registerError);
 
 
         // create user
@@ -32,13 +37,13 @@ const Register = () => {
                 // Sign In
                 const user = res.user;
                 setSuccess('User Registered Successfully.');
-                console.log(user);
+                // console.log(user);
             })
             .catch(error => {
-                const errorCode = error.code;
-                const errorMessage = error.message;
+                // const errorCode = error.code;
+                // const errorMessage = error.message;
                 setRegisterError(error);
-                console.log(errorCode, errorMessage);
+                // console.log(errorCode, errorMessage);
             });
     }
 
@@ -46,13 +51,15 @@ const Register = () => {
         <div className="mt-10 flex flex-col justify-center items-center">
             <h3 className="text-3xl">Please Register</h3>
             <form onSubmit={handleRegister} className="text-center w-80">
-                <input className="w-full my-5 py-2 px-6" type="email" name="email" id="1" placeholder="Email address" />
+                <input className="w-full my-5 py-2 px-6 rounded-lg" type="email" name="email" id="1" placeholder="Email address" />
                 <br />
-                <input className="w-full mb-5 py-2 px-6" type="password" name="password" id="2" placeholder="Password" />
+                <input className="w-full mb-5 py-2 px-6 rounded-lg" type={showPass ? "password" : "text"} name="password" id="2" placeholder="Password" />
+                <button onClick={() => setShowPass(!showPass)}>show</button>
                 <br />
                 <input className="btn btn-primary w-full" type="submit" value="register" />
                 {registerError && <p className="text-red-500">{registerError.message}</p>}
                 {success && <p className="text-green-500">{success}</p>}
+                <br />
             </form>
         </div>
     );
